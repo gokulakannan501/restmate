@@ -51,6 +51,18 @@ function init() {
 
     // Set initial Method Style
     updateMethodStyle();
+
+    // Attach Global Event Listeners
+    const btnNewReq = document.getElementById('btn-new-request');
+    if (btnNewReq) btnNewReq.addEventListener('click', createNewRequest);
+
+    const btnNewCol = document.getElementById('btn-new-collection');
+    if (btnNewCol) btnNewCol.addEventListener('click', createNewCollection);
+
+    const btnSave = document.getElementById('btn-save-request');
+    if (btnSave) btnSave.addEventListener('click', saveCurrentRequest);
+
+    console.log('RestMate Initialized');
 }
 
 function saveData() {
@@ -935,7 +947,12 @@ if (sendBtn) {
 }
 
 // Init
-init();
+try {
+    init();
+} catch (e) {
+    console.error('Init failed:', e);
+    alert('Failed to initialize app: ' + e.message);
+}
 
 // Sync scroll
 const setupSyncScroll = (editorId, highlightId) => {

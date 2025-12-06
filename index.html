@@ -35,7 +35,7 @@
             <div class="app-brand">
                 Rest<span>Mate</span>
             </div>
-            <button class="btn-small btn-primary" onclick="createNewRequest()">+ New</button>
+            <button class="btn-small btn-primary" id="btn-new-request">+ New</button>
         </div>
 
 
@@ -43,7 +43,7 @@
             <!-- Populated via JS -->
         </div>
         <div class="sidebar-footer" id="sidebar-footer" style="padding: 10px; border-top: 1px solid #eee;">
-            <button class="btn-small btn-primary" style="width: 100%;" onclick="createNewCollection()">
+            <button class="btn-small btn-primary" style="width: 100%;" id="btn-new-collection">
                 + New Collection
             </button>
         </div>
@@ -64,7 +64,7 @@
                     id="current-request-name">Select a request</span>
             </div>
             <div class="action-buttons">
-                <button class="btn-small btn-secondary" onclick="saveCurrentRequest()">Save</button>
+                <button class="btn-small btn-secondary" id="btn-save-request">Save</button>
             </div>
         </div>
 

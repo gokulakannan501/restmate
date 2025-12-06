@@ -573,6 +573,7 @@ body {
 .code-editor {
     font-family: var(--font-mono);
     font-size: 13px;
+    line-height: 1.5;
     border: none;
     outline: none;
     padding: 10px;
@@ -593,6 +594,7 @@ body {
 .line-numbers {
     font-family: var(--font-mono);
     font-size: 13px;
+    line-height: 1.5;
     padding: 10px 5px;
     text-align: right;
     color: #ccc;

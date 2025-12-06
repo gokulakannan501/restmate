@@ -803,7 +803,7 @@ body {
     width: calc(100% - 41px);
     z-index: 1;
     pointer-events: none;
-    color: transparent;
+    color: #333;
     background: transparent;
 }
 

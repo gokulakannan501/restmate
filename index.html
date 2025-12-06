@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestMate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR ICONS -->
+    <aside class="icon-bar">
+        <div class="icon-item active" onclick="setSidebarView('collections')">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M20 6h-3V4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 4h6v2H9V4zm11 16H4V8h16v12z" />
+            </svg>
+            <span>Collections</span>
+        </div>
+        <div class="icon-item" onclick="setSidebarView('history')">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                <path d="M13 7h-2v5l4.2 2.5.8-1.3-3-1.8z" />
+            </svg>
+            <span>History</span>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR PANEL -->
+    <aside class="sidebar-panel">
+        <div class="sidebar-header">
+            <div class="app-brand">
+                Rest<span>Mate</span>
+            </div>
+            <button class="btn-small btn-primary" onclick="createNewRequest()">+ New</button>
+        </div>
+
+
+        <div class="collection-tree" id="collection-list">
+            <!-- Populated via JS -->
+        </div>
+        <div class="sidebar-footer" id="sidebar-footer" style="padding: 10px; border-top: 1px solid #eee;">
+            <button class="btn-small btn-primary" style="width: 100%;" onclick="createNewCollection()">
+                + New Collection
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP TAB BAR -->
+        <div class="top-tabs-bar" id="top-tabs-container">
+            <!-- Populated via JS -->
+        </div>
+
+        <!-- BREADCRUMBS & ACTIONS -->
+        <div class="toolbar-header">
+            <div class="breadcrumbs">
+                <span class="collection-ref" id="collection-breadcrumb">My Collection</span> / <span
+                    id="current-request-name">Select a request</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-small btn-secondary" onclick="saveCurrentRequest()">Save</button>
+            </div>
+        </div>
+
+        <!-- WORKSPACE AREA (Request UI) -->
+        <div class="workspace-area">
+
+            <!-- URL Bar -->
+            <div class="url-bar">
+                <select id="method" class="method-select" onchange="window.handleMethodChange()">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="HEAD">HEAD</option>
+                    <option value="OPTIONS">OPTIONS</option>
+                </select>
+                <input type="text" id="url" class="url-input" placeholder="Enter request URL"
+                    oninput="updateUrlState()">
+                <button id="send-btn" class="send-btn">Send</button>
+
+                <div style="margin-left:10px; display:flex; align-items:center; font-size:0.8rem;">
+                    Proxy: <input type="checkbox" id="cors-toggle" checked style="margin-left:5px;">
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-nav">
+                <div class="tab-item" onclick="switchInnerTab('params')">Params <span class="green-dot" id="dot-params"
+                        style="display:none;"></span></div>
+                <div class="tab-item" onclick="switchInnerTab('auth')">Authorization <span class="green-dot"
+                        id="dot-auth" style="display:none;"></span></div>
+                <div class="tab-item active" onclick="switchInnerTab('headers')">Headers <span class="green-dot"
+                        id="dot-headers" style="display:none;"></span></div>
+                <div class="tab-item" onclick="switchInnerTab('body')">Body <span class="green-dot" id="dot-body"
+                        style="display:none;"></span></div>
+                <div class="tab-item" onclick="switchInnerTab('scripts')">Scripts <span class="green-dot"
+                        id="dot-scripts" style="display:none;"></span></div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="scroll-area">
+
+                <!-- HEADERS -->
+                <div id="headers-section" class="section-view active">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:30px"></th>
+                                <th>Key</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="headers-tbody"></tbody>
+                    </table>
+                    <div style="padding:10px;">
+                        <button class="btn-small btn-secondary" onclick="addHeaderRow()">+ Header</button>
+                    </div>
+                </div>
+
+                <!-- BODY -->
+                <div id="body-section" class="section-view">
+                    <div class="editor-wrapper">
+                        <div class="line-numbers" id="ln-body">1</div>
+                        <pre id="body-highlight" class="highlight-layer"></pre>
+                        <textarea id="body-editor" class="code-editor" placeholder="{}" spellcheck="false"
+                            oninput="handleBodyInput(this);"></textarea>
+                    </div>
+                </div>
+
+                <!-- PARAMS -->
+                <div id="params-section" class="section-view">
+                    <div style="padding:10px 0;">
+                        <div style="display:flex; justify-content:space-between; padding: 0 10px; margin-bottom:10px;">
+                            <div style="font-weight:600; font-size:0.85rem; color:#444;">Query Params</div>
+                            <!-- Placeholder button -->
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px"></th>
+                                    <th>Key</th>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="params-tbody"></tbody>
+                        </table>
+                        <div style="padding:10px;">
+                            <button class="btn-small btn-secondary" onclick="addParamRow()">+ Param</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AUTHORIZATION -->
+                <div id="auth-section" class="section-view">
+                    <div class="auth-container">
+                        <div class="auth-row">
+                            <label style="font-weight:600; font-size:0.85rem; color:#444;">Type</label>
+                            <select id="auth-type" onchange="updateAuthType()" class="auth-select">
+                                <option value="noauth">No Auth</option>
+                                <option value="bearer">Bearer Token</option>
+                                <option value="basic">Basic Auth</option>
+                            </select>
+                        </div>
+                        <div id="auth-inputs"></div>
+                    </div>
+                </div>
+
+                <!-- scripts -->
+                <div id="scripts-section" class="section-view" style="padding:0;">
+                    <div class="editor-wrapper">
+                        <div class="line-numbers">1</div>
+                        <textarea class="code-editor" id="script-editor" placeholder="// Write scripts here..."
+                            oninput="updateActiveTabState();"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RESIZER -->
+            <div class="resizer" id="pane-resizer"></div>
+
+            <!-- RESPONSE PANE -->
+            <div class="response-pane" id="response-pane">
+                <div class="response-meta">
+                    <span>Status: <span id="status-val" class="status-val">-</span></span>
+                    <span>Time: <span id="time-val" class="status-val">-</span></span>
+                    <span>Size: <span id="size-val" class="status-val">-</span></span>
+                </div>
+                <div class="editor-wrapper" style="border:none; background:#fafafa;">
+                    <div class="line-numbers" id="ln-resp">1</div>
+                    <pre id="resp-highlight" class="highlight-layer"></pre>
+                    <textarea id="resp-editor" class="code-editor" readonly></textarea>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

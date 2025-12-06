@@ -1,0 +1,16 @@
+{
+    "name": "restmate",
+    "version": "1.0.0",
+    "description": "A lightweight API client",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "engines": {
+        "node": "18.x"
+    }
+}
